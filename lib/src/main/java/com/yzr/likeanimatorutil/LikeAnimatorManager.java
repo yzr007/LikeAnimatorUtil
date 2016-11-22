@@ -21,33 +21,30 @@ import java.util.Random;
 
 public class LikeAnimatorManager {
     //Activity的上下文
-    Context context;
+    private Context context;
 
     //添加动画的目标View
-    View view;
+    private View view;
 
     //添加动画的坐标(目标View + 状态栏高度)
-    int vX, vY;
+    private int vX, vY;
 
     //目标View的宽高
-    int vWidth, vHeight;
+    private int vWidth, vHeight;
 
     //目标View的根布局
-    ViewGroup vRootViewGroup;
+    private ViewGroup vRootViewGroup;
 
-    //点赞view的LayoutParams
-    ViewGroup.LayoutParams likelayoutParams;
-
-    Random random = new Random();
+    private Random random = new Random();
 
     //点赞动画的图片资源集合
-    int[] drawableResourceIds;
+    private int[] drawableResourceIds;
 
     //点赞动画出现的数量，默认20
-    int AnimCount = 20;
+    private int AnimCount = 20;
 
     //点赞动画的间隔时间，默认200ms
-    int AnimDelay = 200;
+    private int AnimDelay = 200;
 
     public LikeAnimatorManager(Context context,View target,int[] drawableResourceIds) {
         this.context = context;
@@ -64,18 +61,14 @@ public class LikeAnimatorManager {
 
     /**
      * 设置动画出现的位置
-     * @param vX
-     * @param vY
      */
     public void setLocation(int vX,int vY) {
         this.vX = vX;
-        this.vX = vY;
+        this.vY = vY;
     }
 
     /**
      * 设置动画图片的大小
-     * @param vWidth
-     * @param vHeight
      */
     public void setSize(int vWidth,int vHeight) {
         this.vWidth = vWidth;
@@ -84,7 +77,6 @@ public class LikeAnimatorManager {
 
     /**
      * 设置动画出现的数量
-     * @param animCount
      */
     public void setAnimCount(int animCount) {
         AnimCount = animCount;
@@ -92,7 +84,6 @@ public class LikeAnimatorManager {
 
     /**
      * 设置动画出现的间隔
-     * @param animDelay
      */
     public void setAnimDelay(int animDelay) {
         AnimDelay = animDelay;
@@ -227,12 +218,12 @@ public class LikeAnimatorManager {
 
     public void addFavor() {
         AnimatorSet animatorSet = new AnimatorSet();
-        likelayoutParams = new ViewGroup.LayoutParams(vWidth,vHeight);
+        ViewGroup.LayoutParams likelayoutParams = new ViewGroup.LayoutParams(vWidth, vHeight);
         for(int i = 0 ; i<AnimCount ; i++){
             ImageView imageView = new ImageView(context);
             imageView.setImageResource(drawableResourceIds[random.nextInt(drawableResourceIds.length)]);
             imageView.setVisibility(View.GONE);
-            vRootViewGroup.addView(imageView,likelayoutParams);
+            vRootViewGroup.addView(imageView, likelayoutParams);
             Animator set = getBezierValueAnimator(imageView);
             set.addListener(new AnimEndListener(imageView));
             set.setStartDelay(AnimDelay*i);
