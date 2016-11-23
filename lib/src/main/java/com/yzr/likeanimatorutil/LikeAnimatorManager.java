@@ -46,6 +46,15 @@ public class LikeAnimatorManager {
     //点赞动画的间隔时间，默认200ms
     private int AnimDelay = 200;
 
+    //点赞动画的单次播放时间，默认2000ms
+    private int AnimDuration = 2000;
+
+    //点赞动画的活动高度
+    private int AnimPathHeight = 600;
+
+    //点赞动画的横向活动范围
+    private int AnimHorizontalScope = 200;
+
     public LikeAnimatorManager(Context context,View target,int[] drawableResourceIds) {
         this.context = context;
         this.view = target;
@@ -90,87 +99,6 @@ public class LikeAnimatorManager {
     }
 
 
-    /**
-     * 我们自定义一个BezierEvaluator 实现 TypeEvaluator
-     * 由于我们view的移动需要控制x y 所以就传入PointF 作为参数,是不是感觉完全契合
-     */
-    public class BezierEvaluator implements TypeEvaluator<PointF> {
-
-        private PointF pointF1;
-        private PointF pointF2;
-
-        public BezierEvaluator(PointF pointF1,PointF pointF2){
-            this.pointF1 = pointF1;
-            this.pointF2 = pointF2;
-        }
-
-        @Override
-        public PointF evaluate(float time, PointF startValue,
-                               PointF endValue) {
-
-            float timeLeft = 1.0f - time;
-            PointF point = new PointF();//结果
-
-            point.x = timeLeft * timeLeft * timeLeft * (startValue.x)
-                    + 3 * timeLeft * timeLeft * time * (pointF1.x)
-                    + 3 * timeLeft * time * time * (pointF2.x)
-                    + time * time * time * (endValue.x);
-
-            point.y = timeLeft * timeLeft * timeLeft * (startValue.y)
-                    + 3 * timeLeft * timeLeft * time * (pointF1.y)
-                    + 3 * timeLeft * time * time * (pointF2.y)
-                    + time * time * time * (endValue.y);
-            return point;
-        }
-    }
-
-    /**
-     * 贝塞尔曲线的动画实现
-     */
-
-    private ValueAnimator getBezierValueAnimator(View target) {
-        //初始化一个BezierEvaluator
-        BezierEvaluator evaluator = new BezierEvaluator(getPointF(0), getPointF(1));
-
-        //第一个PointF传入的是初始点的位置
-        ValueAnimator animator = ValueAnimator.ofObject(evaluator, new PointF(vX, vY), new PointF(vX - 50 + random.nextInt(100), vY - 600));//随机
-        animator.addUpdateListener(new BezierListenr(target));
-        animator.setTarget(target);
-        animator.setDuration(2000);
-        return animator;
-    }
-    /**
-     * 获取中间的两个点
-     */
-    private PointF getPointF(int scale) {
-
-        PointF pointF = new PointF();
-        pointF.x = vX -100 + random.nextInt(200);
-        //再Y轴上 为了确保第二个点 在第一个点之上,我把Y分成了上下两半 这样动画效果好一些  也可以用其他方法
-        pointF.y = vY - 300*scale - random.nextInt(300);
-        return pointF;
-    }
-
-    /**
-     * 只有在回调里使用了计算的值,才能真正做到曲线运动
-     */
-    private class BezierListenr implements ValueAnimator.AnimatorUpdateListener {
-        private View target;
-
-        public BezierListenr(View target) {
-            this.target = target;
-        }
-
-        @Override
-        public void onAnimationUpdate(ValueAnimator animation) {
-            //这里获取到贝塞尔曲线计算出来的的x y值 赋值给view 这样就能让爱心随着曲线走啦
-            PointF pointF = (PointF) animation.getAnimatedValue();
-            target.setX(pointF.x);
-            target.setY(pointF.y);
-            // alpha动画
-            target.setAlpha(1 - animation.getAnimatedFraction());
-        }
-    }
 
     //TODO 拆分缩放和透明度变化 设置参数
     /**
@@ -219,12 +147,17 @@ public class LikeAnimatorManager {
     public void addFavor() {
         AnimatorSet animatorSet = new AnimatorSet();
         ViewGroup.LayoutParams likelayoutParams = new ViewGroup.LayoutParams(vWidth, vHeight);
+        BezierAnimGenerator bezierAnimGenerator = new BezierAnimGenerator();
+        bezierAnimGenerator.setDuration(AnimDuration);
+        bezierAnimGenerator.setAnimPathHeight(AnimPathHeight);
+        bezierAnimGenerator.setHorizontalScope(AnimHorizontalScope);
+        bezierAnimGenerator.setStartLocation(vX,vY);
         for(int i = 0 ; i<AnimCount ; i++){
             ImageView imageView = new ImageView(context);
             imageView.setImageResource(drawableResourceIds[random.nextInt(drawableResourceIds.length)]);
             imageView.setVisibility(View.GONE);
             vRootViewGroup.addView(imageView, likelayoutParams);
-            Animator set = getBezierValueAnimator(imageView);
+            Animator set = bezierAnimGenerator.animgenerate(imageView);
             set.addListener(new AnimEndListener(imageView));
             set.setStartDelay(AnimDelay*i);
             animatorSet.play(set);
