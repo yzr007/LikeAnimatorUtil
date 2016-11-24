@@ -43,6 +43,9 @@ public class LikeAnimatorManager {
     //点赞动画出现的数量，默认20
     private int AnimCount = 20;
 
+    //点赞动画出现的最大数量
+    private final int MAXANIMCOUNT = 200;
+
     //点赞动画的间隔时间，默认200ms
     private int AnimDelay = 200;
 
@@ -54,6 +57,22 @@ public class LikeAnimatorManager {
 
     //点赞动画的横向活动范围
     private int AnimHorizontalScope = 200;
+
+    //是否执行缩放动画
+    private boolean ScaleAble = false;
+
+    //缩放动画的缩放范围 支持负数 最小支持到-1 默认0.5
+    private float scaleScope = 0.5f;
+
+    //是否执行透明度动画
+    private boolean AlphaAble = false;
+
+    //透明度动画的起始于终止值 默认从不透明到透明 1到0
+    private float startAlpha = 1f;
+    private float endAlpha = 0f;
+
+    //循环播放标志位
+    private boolean loop;
 
     public LikeAnimatorManager(Context context,View target,int[] drawableResourceIds) {
         this.context = context;
@@ -80,14 +99,45 @@ public class LikeAnimatorManager {
      * 设置动画图片的大小
      */
     public void setSize(int vWidth,int vHeight) {
-        this.vWidth = vWidth;
-        this.vHeight = vHeight;
+        this.vWidth = Math.abs(vWidth);
+        this.vHeight = Math.abs(vHeight);
+    }
+
+    /**
+     * 设置点赞动画的单次播放时间
+     */
+    public void setAnimDuration(int animDuration) {
+        if(animDuration < 0){
+            return;
+        }
+        AnimDuration = animDuration;
+    }
+
+    /**
+     * 设置点赞动画的活动高度
+     */
+    public void setAnimPathHeight(int animPathHeight) {
+        AnimPathHeight = Math.abs(animPathHeight);
+    }
+
+    /**
+     * 设置点赞动画的横向活动范围
+     */
+    public void setAnimHorizontalScope(int animHorizontalScope) {
+        AnimHorizontalScope = animHorizontalScope;
     }
 
     /**
      * 设置动画出现的数量
      */
     public void setAnimCount(int animCount) {
+        if(animCount < 0){
+            return;
+        }
+        if(animCount > MAXANIMCOUNT){
+            AnimCount = MAXANIMCOUNT;
+            return;
+        }
         AnimCount = animCount;
     }
 
@@ -95,29 +145,85 @@ public class LikeAnimatorManager {
      * 设置动画出现的间隔
      */
     public void setAnimDelay(int animDelay) {
+        if(animDelay < 0){
+            return;
+        }
         AnimDelay = animDelay;
     }
 
+    public boolean isScaleAble() {
+        return ScaleAble;
+    }
 
-
-    //TODO 拆分缩放和透明度变化 设置参数
     /**
-     * 通过属性动画 实现爱心图片的缩放和透明度变化的动画效果
-     * target 就是爱心图片的view
+     * 设置是否执行缩放动画
      */
-    private AnimatorSet getEnterAnimtor(final View target){
+    public void setScaleAble(boolean scaleAble) {
+        ScaleAble = scaleAble;
+    }
 
+    public boolean isAlphaAble() {
+        return AlphaAble;
+    }
 
-        ObjectAnimator scaleX = ObjectAnimator.ofFloat(target, View.SCALE_X, 0.2f, 1f);
-        ObjectAnimator scaleY = ObjectAnimator.ofFloat(target, View.SCALE_Y, 0.2f, 1f);
+    /**
+     * 设置是否执行透明动画
+     */
+    public void setAlphaAble(boolean alphaAble) {
+        AlphaAble = alphaAble;
+    }
 
-        AnimatorSet enter = new AnimatorSet();
-        enter.setDuration(500);
-        enter.setInterpolator(new LinearInterpolator());//线性变化
-        enter.playTogether(scaleX,scaleY);
-        enter.setTarget(target);
+    /**
+     * 设置缩放动画的缩放值
+     */
+    public void setScaleScope(float scaleScope) {
+        if(scaleScope < -1){
+            scaleScope = -1;
+        }
+        this.scaleScope = scaleScope;
+    }
 
-        return enter;
+    /**
+     * 设置透明度动画的起始透明度
+     */
+    public void setStartAlpha(float startAlpha) {
+        this.startAlpha = startAlpha;
+    }
+    /**
+     * 设置透明度动画的终止透明度
+     */
+    public void setEndAlpha(float endAlpha) {
+        this.endAlpha = endAlpha;
+    }
+
+    /**
+     * 通过属性动画 实现图片的缩放动画效果
+     */
+    private AnimatorSet getScaleAnimtor(View target,int animDelay){
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(target, View.SCALE_X, 1f, 1f+scaleScope);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(target, View.SCALE_Y, 1f, 1f+scaleScope);
+        AnimatorSet scaleAnimtor = new AnimatorSet();
+        scaleAnimtor.setDuration(AnimDuration);
+        scaleAnimtor.setStartDelay(animDelay);
+        scaleAnimtor.setInterpolator(new LinearInterpolator());//线性变化
+        scaleAnimtor.playTogether(scaleX,scaleY);
+        scaleAnimtor.setTarget(target);
+        return scaleAnimtor;
+    }
+
+    /**
+     * 通过属性动画 实现图片的透明度变化的动画效果
+     */
+    private AnimatorSet getAlphaAnimtor(View target,int animDelay){
+
+        ObjectAnimator alpha = ObjectAnimator.ofFloat(target, View.ALPHA, startAlpha, endAlpha);
+        AnimatorSet alphaAnimtor = new AnimatorSet();
+        alphaAnimtor.setDuration(AnimDuration);
+        alphaAnimtor.setStartDelay(animDelay);
+        alphaAnimtor.setInterpolator(new LinearInterpolator());//线性变化
+        alphaAnimtor.playTogether(alpha);
+        alphaAnimtor.setTarget(target);
+        return alphaAnimtor;
     }
 
     /**
@@ -144,7 +250,7 @@ public class LikeAnimatorManager {
         }
     }
 
-    public void addFavor() {
+    public void play() {
         AnimatorSet animatorSet = new AnimatorSet();
         ViewGroup.LayoutParams likelayoutParams = new ViewGroup.LayoutParams(vWidth, vHeight);
         BezierAnimGenerator bezierAnimGenerator = new BezierAnimGenerator();
@@ -161,6 +267,8 @@ public class LikeAnimatorManager {
             set.addListener(new AnimEndListener(imageView));
             set.setStartDelay(AnimDelay*i);
             animatorSet.play(set);
+            if(ScaleAble) animatorSet.play(getScaleAnimtor(imageView,AnimDelay*i));
+            if(AlphaAble) animatorSet.play(getAlphaAnimtor(imageView,AnimDelay*i));
         }
         animatorSet.start();
     }
