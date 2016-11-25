@@ -23,6 +23,9 @@ public class LikeAnimatorManager {
     //点赞动画集合
     private AnimatorSet animatorSet;
 
+    //轨迹动画
+    private AnimGenerator animGenerator;
+
     //Activity的上下文
     private Context context;
 
@@ -88,6 +91,14 @@ public class LikeAnimatorManager {
         vWidth = target.getWidth();
         vHeight = target.getHeight();
         this.drawableResourceIds = drawableResourceIds;
+        animGenerator = new BezierAnimGenerator();
+    }
+
+    /**
+     *自定义轨迹动画生成器
+     */
+    public void setAnimGenerator(AnimGenerator animGenerator) {
+        this.animGenerator = animGenerator;
     }
 
     /**
@@ -272,17 +283,16 @@ public class LikeAnimatorManager {
     public void play() {
         animatorSet = new AnimatorSet();
         ViewGroup.LayoutParams likelayoutParams = new ViewGroup.LayoutParams(vWidth, vHeight);
-        BezierAnimGenerator bezierAnimGenerator = new BezierAnimGenerator();
-        bezierAnimGenerator.setDuration(AnimDuration);
-        bezierAnimGenerator.setAnimPathHeight(AnimPathHeight);
-        bezierAnimGenerator.setHorizontalScope(AnimHorizontalScope);
-        bezierAnimGenerator.setStartLocation(vX,vY);
+        animGenerator.setDuration(AnimDuration);
+        animGenerator.setAnimPathHeight(AnimPathHeight);
+        animGenerator.setHorizontalScope(AnimHorizontalScope);
+        animGenerator.setStartLocation(vX,vY);
         for(int i = 0 ; i<AnimCount ; i++){
             ImageView imageView = new ImageView(context);
             imageView.setImageResource(drawableResourceIds[random.nextInt(drawableResourceIds.length)]);
             imageView.setVisibility(View.GONE);
             vRootViewGroup.addView(imageView, likelayoutParams);
-            Animator set = bezierAnimGenerator.animgenerate(imageView);
+            Animator set = animGenerator.animgenerate(imageView);
             set.addListener(new AnimEndListener(imageView));
             set.setStartDelay(AnimDelay*i);
             animatorSet.play(set);

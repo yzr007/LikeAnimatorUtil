@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity{
         int[] imgs = {R.mipmap.heart_01,R.mipmap.heart_02,R.mipmap.heart_03,R.mipmap.heart_04,R.mipmap.heart_05};
         likeAnimatorManager = new LikeAnimatorManager(this,txt,imgs);
         //动画视图的大小和位置默认为target的大小和位置，可以通过setLocation()和setSize()自由配置
+        //支持自定义的轨迹动画生成器setAnimGenerator(customAnimGenerator)
         likeAnimatorManager.setAnimDelay(50);//单个动画的间隔，默认200ms
         likeAnimatorManager.setAnimCount(50);//点赞动画的数量，默认20
         likeAnimatorManager.setAnimDuration(1000);//单个动画的Duration，默认2000ms
