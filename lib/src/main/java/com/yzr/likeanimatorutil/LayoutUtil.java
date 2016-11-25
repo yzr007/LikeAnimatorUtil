@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 
 /**
@@ -17,7 +18,7 @@ public class LayoutUtil {
      * @return
      */
     public static ViewGroup getRootView(Context context) {
-        return ((ViewGroup) ((Activity)context).findViewById(android.R.id.content));
+        return ((ViewGroup) ((Activity)context).getWindow().getDecorView());
     }
 
     /**

@@ -20,6 +20,9 @@ import java.util.Random;
  */
 
 public class LikeAnimatorManager {
+    //点赞动画集合
+    private AnimatorSet animatorSet;
+
     //Activity的上下文
     private Context context;
 
@@ -80,7 +83,7 @@ public class LikeAnimatorManager {
         this.vRootViewGroup = LayoutUtil.getRootView(context);
         //默认坐标为目标view的坐标
         vX = LayoutUtil.getScreenX(target);
-        vY = LayoutUtil.getScreenY(target)+(LayoutUtil.isShowStatus(context)?LayoutUtil.getStatusHeight(context):0);
+        vY = LayoutUtil.getScreenY(target);//-(LayoutUtil.isShowStatus(context)?LayoutUtil.getStatusHeight(context):0);
         //默认大小为目标view的大小
         vWidth = target.getWidth();
         vHeight = target.getHeight();
@@ -92,6 +95,22 @@ public class LikeAnimatorManager {
      */
     public void setLocation(int vX,int vY) {
         this.vX = vX;
+        this.vY = vY;
+    }
+
+    public int getvX() {
+        return vX;
+    }
+
+    public void setvX(int vX) {
+        this.vX = vX;
+    }
+
+    public int getvY() {
+        return vY;
+    }
+
+    public void setvY(int vY) {
         this.vY = vY;
     }
 
@@ -251,7 +270,7 @@ public class LikeAnimatorManager {
     }
 
     public void play() {
-        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet = new AnimatorSet();
         ViewGroup.LayoutParams likelayoutParams = new ViewGroup.LayoutParams(vWidth, vHeight);
         BezierAnimGenerator bezierAnimGenerator = new BezierAnimGenerator();
         bezierAnimGenerator.setDuration(AnimDuration);
@@ -273,4 +292,9 @@ public class LikeAnimatorManager {
         animatorSet.start();
     }
 
+    private void cancel(){
+        if(animatorSet != null && animatorSet.isRunning()){
+            animatorSet.cancel();
+        }
+    }
 }

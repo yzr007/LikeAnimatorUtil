@@ -15,7 +15,7 @@ public class BezierAnimGenerator extends AnimGenerator{
     private Random random;
 
     public BezierAnimGenerator(){
-        initAnimEvaluator();
+        random = new Random();
     }
 
     private void initAnimEvaluator(){
@@ -24,6 +24,7 @@ public class BezierAnimGenerator extends AnimGenerator{
     }
     @Override
     public ValueAnimator animgenerate(View target) {
+        initAnimEvaluator();
         ValueAnimator animator = ValueAnimator.ofObject(bezierAnimEvaluator, new PointF(startX, startY), new PointF(startX - horizontalScope/2 + random.nextInt(horizontalScope), startY - animPathHeight));
         AnimListener bezierAnimListener = new AnimListener(target);
         animator.addUpdateListener(bezierAnimListener);
@@ -32,23 +33,6 @@ public class BezierAnimGenerator extends AnimGenerator{
         return animator;
     }
 
-    @Override
-    public void setAnimPathHeight(int height) {
-        super.setAnimPathHeight(height);
-        initAnimEvaluator();
-    }
-
-    @Override
-    public void setStartLocation(int startX, int startY) {
-        super.setStartLocation(startX, startY);
-        initAnimEvaluator();
-    }
-
-    @Override
-    public void setHorizontalScope(int horizontalScope) {
-        super.setHorizontalScope(horizontalScope);
-        initAnimEvaluator();
-    }
 
     /**
      * 获取中间的两个点
