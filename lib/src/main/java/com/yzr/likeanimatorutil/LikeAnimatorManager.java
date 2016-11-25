@@ -292,7 +292,7 @@ public class LikeAnimatorManager {
         animatorSet.start();
     }
 
-    private void cancel(){
+    public void cancel(){
         if(animatorSet != null && animatorSet.isRunning()){
             animatorSet.cancel();
         }
