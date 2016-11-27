@@ -20,74 +20,74 @@ import java.util.Random;
  */
 
 public class LikeAnimatorManager {
-    //ç‚¹èµåŠ¨ç”»é›†åˆ
+    //µãÔŞ¶¯»­¼¯ºÏ
     private AnimatorSet animatorSet;
 
-    //è½¨è¿¹åŠ¨ç”»
+    //¹ì¼£¶¯»­
     private AnimGenerator animGenerator;
 
-    //Activityçš„ä¸Šä¸‹æ–‡
+    //ActivityµÄÉÏÏÂÎÄ
     private Context context;
 
-    //æ·»åŠ åŠ¨ç”»çš„ç›®æ ‡View
+    //Ìí¼Ó¶¯»­µÄÄ¿±êView
     private View view;
 
-    //æ·»åŠ åŠ¨ç”»çš„åæ ‡(ç›®æ ‡View + çŠ¶æ€æ é«˜åº¦)
+    //Ìí¼Ó¶¯»­µÄ×ø±ê(Ä¿±êView + ×´Ì¬À¸¸ß¶È)
     private int vX, vY;
 
-    //ç›®æ ‡Viewçš„å®½é«˜
+    //Ä¿±êViewµÄ¿í¸ß
     private int vWidth, vHeight;
 
-    //ç›®æ ‡Viewçš„æ ¹å¸ƒå±€
+    //Ä¿±êViewµÄ¸ù²¼¾Ö
     private ViewGroup vRootViewGroup;
 
     private Random random = new Random();
 
-    //ç‚¹èµåŠ¨ç”»çš„å›¾ç‰‡èµ„æºé›†åˆ
+    //µãÔŞ¶¯»­µÄÍ¼Æ¬×ÊÔ´¼¯ºÏ
     private int[] drawableResourceIds;
 
-    //ç‚¹èµåŠ¨ç”»å‡ºç°çš„æ•°é‡ï¼Œé»˜è®¤20
+    //µãÔŞ¶¯»­³öÏÖµÄÊıÁ¿£¬Ä¬ÈÏ20
     private int AnimCount = 20;
 
-    //ç‚¹èµåŠ¨ç”»å‡ºç°çš„æœ€å¤§æ•°é‡
+    //µãÔŞ¶¯»­³öÏÖµÄ×î´óÊıÁ¿
     private final int MAXANIMCOUNT = 200;
 
-    //ç‚¹èµåŠ¨ç”»çš„é—´éš”æ—¶é—´ï¼Œé»˜è®¤200ms
+    //µãÔŞ¶¯»­µÄ¼ä¸ôÊ±¼ä£¬Ä¬ÈÏ200ms
     private int AnimDelay = 200;
 
-    //ç‚¹èµåŠ¨ç”»çš„å•æ¬¡æ’­æ”¾æ—¶é—´ï¼Œé»˜è®¤2000ms
+    //µãÔŞ¶¯»­µÄµ¥´Î²¥·ÅÊ±¼ä£¬Ä¬ÈÏ2000ms
     private int AnimDuration = 2000;
 
-    //ç‚¹èµåŠ¨ç”»çš„æ´»åŠ¨é«˜åº¦
+    //µãÔŞ¶¯»­µÄ»î¶¯¸ß¶È
     private int AnimPathHeight = 600;
 
-    //ç‚¹èµåŠ¨ç”»çš„æ¨ªå‘æ´»åŠ¨èŒƒå›´
+    //µãÔŞ¶¯»­µÄºáÏò»î¶¯·¶Î§
     private int AnimHorizontalScope = 200;
 
-    //æ˜¯å¦æ‰§è¡Œç¼©æ”¾åŠ¨ç”»
+    //ÊÇ·ñÖ´ĞĞËõ·Å¶¯»­
     private boolean ScaleAble = false;
 
-    //ç¼©æ”¾åŠ¨ç”»çš„ç¼©æ”¾èŒƒå›´ æ”¯æŒè´Ÿæ•° æœ€å°æ”¯æŒåˆ°-1 é»˜è®¤0.5
+    //Ëõ·Å¶¯»­µÄËõ·Å·¶Î§ Ö§³Ö¸ºÊı ×îĞ¡Ö§³Öµ½-1 Ä¬ÈÏ0.5
     private float scaleScope = 0.5f;
 
-    //æ˜¯å¦æ‰§è¡Œé€æ˜åº¦åŠ¨ç”»
+    //ÊÇ·ñÖ´ĞĞÍ¸Ã÷¶È¶¯»­
     private boolean AlphaAble = false;
 
-    //é€æ˜åº¦åŠ¨ç”»çš„èµ·å§‹äºç»ˆæ­¢å€¼ é»˜è®¤ä»ä¸é€æ˜åˆ°é€æ˜ 1åˆ°0
+    //Í¸Ã÷¶È¶¯»­µÄÆğÊ¼ÓÚÖÕÖ¹Öµ Ä¬ÈÏ´Ó²»Í¸Ã÷µ½Í¸Ã÷ 1µ½0
     private float startAlpha = 1f;
     private float endAlpha = 0f;
 
-    //å¾ªç¯æ’­æ”¾æ ‡å¿—ä½
+    //Ñ­»·²¥·Å±êÖ¾Î»
     private boolean loop;
 
     public LikeAnimatorManager(Context context,View target,int[] drawableResourceIds) {
         this.context = context;
         this.view = target;
         this.vRootViewGroup = LayoutUtil.getRootView(context);
-        //é»˜è®¤åæ ‡ä¸ºç›®æ ‡viewçš„åæ ‡
+        //Ä¬ÈÏ×ø±êÎªÄ¿±êviewµÄ×ø±ê
         vX = LayoutUtil.getScreenX(target);
         vY = LayoutUtil.getScreenY(target);//-(LayoutUtil.isShowStatus(context)?LayoutUtil.getStatusHeight(context):0);
-        //é»˜è®¤å¤§å°ä¸ºç›®æ ‡viewçš„å¤§å°
+        //Ä¬ÈÏ´óĞ¡ÎªÄ¿±êviewµÄ´óĞ¡
         vWidth = target.getWidth();
         vHeight = target.getHeight();
         this.drawableResourceIds = drawableResourceIds;
@@ -95,14 +95,17 @@ public class LikeAnimatorManager {
     }
 
     /**
-     *è‡ªå®šä¹‰è½¨è¿¹åŠ¨ç”»ç”Ÿæˆå™¨
+     *×Ô¶¨Òå¹ì¼£¶¯»­Éú³ÉÆ÷
+     * @param animGenerator ¹ì¼£¶¯»­Éú³ÉÆ÷
      */
     public void setAnimGenerator(AnimGenerator animGenerator) {
         this.animGenerator = animGenerator;
     }
 
     /**
-     * è®¾ç½®åŠ¨ç”»å‡ºç°çš„ä½ç½®
+     * ÉèÖÃ¶¯»­³öÏÖµÄÎ»ÖÃ
+     * @param vX ¶¯»­³öÏÖÎ»ÖÃÔÚÆÁÄ»ÉÏµÄX×ø±ê
+     * @param vY ¶¯»­³öÏÖÎ»ÖÃÔÚÆÁÄ»ÉÏµÄY×ø±ê
      */
     public void setLocation(int vX,int vY) {
         this.vX = vX;
@@ -126,7 +129,9 @@ public class LikeAnimatorManager {
     }
 
     /**
-     * è®¾ç½®åŠ¨ç”»å›¾ç‰‡çš„å¤§å°
+     * ÉèÖÃ¶¯»­Í¼Æ¬µÄ´óĞ¡
+     * @param vWidth µ¥¸öµãÔŞ¶¯»­Í¼±êµÄ¿í
+     * @param vHeight µ¥¸öµãÔŞ¶¯»­Í¼±êµÄ¸ß
      */
     public void setSize(int vWidth,int vHeight) {
         this.vWidth = Math.abs(vWidth);
@@ -134,7 +139,8 @@ public class LikeAnimatorManager {
     }
 
     /**
-     * è®¾ç½®ç‚¹èµåŠ¨ç”»çš„å•æ¬¡æ’­æ”¾æ—¶é—´
+     * ÉèÖÃµãÔŞ¶¯»­µÄµ¥´Î²¥·ÅÊ±¼ä
+     * @param animDuration µãÔŞ¶¯»­µÄµ¥´Î²¥·ÅÊ±¼ä
      */
     public void setAnimDuration(int animDuration) {
         if(animDuration < 0){
@@ -144,21 +150,24 @@ public class LikeAnimatorManager {
     }
 
     /**
-     * è®¾ç½®ç‚¹èµåŠ¨ç”»çš„æ´»åŠ¨é«˜åº¦
+     * ÉèÖÃµãÔŞ¶¯»­µÄ»î¶¯¸ß¶È
+     * @param animPathHeight µãÔŞ¶¯»­µÄ»î¶¯¸ß¶È
      */
     public void setAnimPathHeight(int animPathHeight) {
         AnimPathHeight = Math.abs(animPathHeight);
     }
 
     /**
-     * è®¾ç½®ç‚¹èµåŠ¨ç”»çš„æ¨ªå‘æ´»åŠ¨èŒƒå›´
+     * ÉèÖÃµãÔŞ¶¯»­µÄºáÏò»î¶¯·¶Î§
+     * @param animHorizontalScope µãÔŞ¶¯»­µÄºáÏò»î¶¯·¶Î§
      */
     public void setAnimHorizontalScope(int animHorizontalScope) {
         AnimHorizontalScope = animHorizontalScope;
     }
 
     /**
-     * è®¾ç½®åŠ¨ç”»å‡ºç°çš„æ•°é‡
+     * ÉèÖÃ¶¯»­³öÏÖµÄÊıÁ¿
+     * @param animCount ¶¯»­³öÏÖµÄÊıÁ¿
      */
     public void setAnimCount(int animCount) {
         if(animCount < 0){
@@ -172,7 +181,8 @@ public class LikeAnimatorManager {
     }
 
     /**
-     * è®¾ç½®åŠ¨ç”»å‡ºç°çš„é—´éš”
+     * ÉèÖÃ¶¯»­³öÏÖµÄ¼ä¸ô
+     * @param animDelay ¶¯»­³öÏÖµÄ¼ä¸ô
      */
     public void setAnimDelay(int animDelay) {
         if(animDelay < 0){
@@ -181,30 +191,41 @@ public class LikeAnimatorManager {
         AnimDelay = animDelay;
     }
 
+    /**
+     * »ñµÃÊÇ·ñÖ´ĞĞËõ·Å¶¯»­
+     * @return ÊÇ·ñÖ´ĞĞËõ·Å¶¯»­
+     */
     public boolean isScaleAble() {
         return ScaleAble;
     }
 
     /**
-     * è®¾ç½®æ˜¯å¦æ‰§è¡Œç¼©æ”¾åŠ¨ç”»
+     * ÉèÖÃÊÇ·ñÖ´ĞĞËõ·Å¶¯»­
+     * @param scaleAble ÊÇ·ñÖ´ĞĞËõ·Å¶¯»­
      */
     public void setScaleAble(boolean scaleAble) {
         ScaleAble = scaleAble;
     }
 
+    /**
+     * »ñµÃÊÇ·ñÖ´ĞĞÍ¸Ã÷¶¯»­
+     * @return ÊÇ·ñÖ´ĞĞÍ¸Ã÷¶¯»­
+     */
     public boolean isAlphaAble() {
         return AlphaAble;
     }
 
     /**
-     * è®¾ç½®æ˜¯å¦æ‰§è¡Œé€æ˜åŠ¨ç”»
+     * ÉèÖÃÊÇ·ñÖ´ĞĞÍ¸Ã÷¶¯»­
+     * @param alphaAble ÊÇ·ñÖ´ĞĞÍ¸Ã÷¶¯»­
      */
     public void setAlphaAble(boolean alphaAble) {
         AlphaAble = alphaAble;
     }
 
     /**
-     * è®¾ç½®ç¼©æ”¾åŠ¨ç”»çš„ç¼©æ”¾å€¼
+     * ÉèÖÃËõ·Å¶¯»­µÄËõ·ÅÖµ
+     * @param scaleScope Ëõ·Å¶¯»­µÄËõ·ÅÖµ 1µ½£¨1+scaleScope£©
      */
     public void setScaleScope(float scaleScope) {
         if(scaleScope < -1){
@@ -214,20 +235,24 @@ public class LikeAnimatorManager {
     }
 
     /**
-     * è®¾ç½®é€æ˜åº¦åŠ¨ç”»çš„èµ·å§‹é€æ˜åº¦
+     * ÉèÖÃÍ¸Ã÷¶È¶¯»­µÄÆğÊ¼Í¸Ã÷¶È
+     * @param startAlpha Í¸Ã÷¶È¶¯»­µÄÆğÊ¼Í¸Ã÷¶È
      */
     public void setStartAlpha(float startAlpha) {
         this.startAlpha = startAlpha;
     }
     /**
-     * è®¾ç½®é€æ˜åº¦åŠ¨ç”»çš„ç»ˆæ­¢é€æ˜åº¦
+     * ÉèÖÃÍ¸Ã÷¶È¶¯»­µÄÖÕÖ¹Í¸Ã÷¶È
+     * @param endAlpha Í¸Ã÷¶È¶¯»­µÄÖÕÖ¹Í¸Ã÷¶È
      */
     public void setEndAlpha(float endAlpha) {
         this.endAlpha = endAlpha;
     }
 
     /**
-     * é€šè¿‡å±æ€§åŠ¨ç”» å®ç°å›¾ç‰‡çš„ç¼©æ”¾åŠ¨ç”»æ•ˆæœ
+     * Í¨¹ıÊôĞÔ¶¯»­ ÊµÏÖÍ¼Æ¬µÄËõ·Å¶¯»­Ğ§¹û
+     * @param target Ìí¼Ó¶¯»­Ğ§¹ûµÄÄ¿±êView
+     * @param animDelay ¶¯»­µÄ¼ä¸ô
      */
     private AnimatorSet getScaleAnimtor(View target,int animDelay){
         ObjectAnimator scaleX = ObjectAnimator.ofFloat(target, View.SCALE_X, 1f, 1f+scaleScope);
@@ -235,14 +260,16 @@ public class LikeAnimatorManager {
         AnimatorSet scaleAnimtor = new AnimatorSet();
         scaleAnimtor.setDuration(AnimDuration);
         scaleAnimtor.setStartDelay(animDelay);
-        scaleAnimtor.setInterpolator(new LinearInterpolator());//çº¿æ€§å˜åŒ–
+        scaleAnimtor.setInterpolator(new LinearInterpolator());//ÏßĞÔ±ä»¯
         scaleAnimtor.playTogether(scaleX,scaleY);
         scaleAnimtor.setTarget(target);
         return scaleAnimtor;
     }
 
     /**
-     * é€šè¿‡å±æ€§åŠ¨ç”» å®ç°å›¾ç‰‡çš„é€æ˜åº¦å˜åŒ–çš„åŠ¨ç”»æ•ˆæœ
+     * Í¨¹ıÊôĞÔ¶¯»­ ÊµÏÖÍ¼Æ¬µÄÍ¸Ã÷¶È±ä»¯µÄ¶¯»­Ğ§¹û
+     * @param target Ìí¼Ó¶¯»­Ğ§¹ûµÄÄ¿±êView
+     * @param animDelay ¶¯»­µÄ¼ä¸ô
      */
     private AnimatorSet getAlphaAnimtor(View target,int animDelay){
 
@@ -250,14 +277,14 @@ public class LikeAnimatorManager {
         AnimatorSet alphaAnimtor = new AnimatorSet();
         alphaAnimtor.setDuration(AnimDuration);
         alphaAnimtor.setStartDelay(animDelay);
-        alphaAnimtor.setInterpolator(new LinearInterpolator());//çº¿æ€§å˜åŒ–
+        alphaAnimtor.setInterpolator(new LinearInterpolator());//ÏßĞÔ±ä»¯
         alphaAnimtor.playTogether(alpha);
         alphaAnimtor.setTarget(target);
         return alphaAnimtor;
     }
 
     /**
-     * åŠ¨ç”»ç»“æŸåï¼Œremove
+     * ¶¯»­½áÊø¼àÌıÆ÷£¬removeÌí¼ÓµÄ¶¯»­View
      */
     private class AnimEndListener extends AnimatorListenerAdapter {
         private View target;
@@ -275,11 +302,13 @@ public class LikeAnimatorManager {
         @Override
         public void onAnimationEnd(Animator animation) {
             super.onAnimationEnd(animation);
-            //å› ä¸ºä¸åœçš„add å¯¼è‡´å­viewæ•°é‡åªå¢ä¸å‡,æ‰€ä»¥åœ¨viewåŠ¨ç”»ç»“æŸåremoveæ‰
             vRootViewGroup.removeView((target));
         }
     }
 
+    /**
+     * ²¥·ÅµãÔŞ¶¯»­
+     */
     public void play() {
         animatorSet = new AnimatorSet();
         ViewGroup.LayoutParams likelayoutParams = new ViewGroup.LayoutParams(vWidth, vHeight);
@@ -302,6 +331,9 @@ public class LikeAnimatorManager {
         animatorSet.start();
     }
 
+    /**
+     * È¡Ïû²¥·ÅµãÔŞ¶¯»­
+     */
     public void cancel(){
         if(animatorSet != null && animatorSet.isRunning()){
             animatorSet.cancel();
