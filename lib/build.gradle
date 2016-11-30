@@ -1,9 +1,10 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'com.jfrog.bintray'
-// This is the library version used when deploying the artifact
-version = "1.0.0"
-
+apply plugin: 'com.novoda.bintray-release'
+project.afterEvaluate {
+    task bintrayUpload(group: "publishing", overwrite: true) {
+        dependsOn subprojects.bintrayUpload
+    }
+}
 android {
     compileSdkVersion 24
     buildToolsVersion "24.0.0"
@@ -35,77 +36,12 @@ dependencies {
     testCompile 'junit:junit:4.12'
 
 }
-
-
-def siteUrl = 'https://github.com/yzr007/LikeAnimatorUtil'    // project homepage
-def gitUrl = 'https://github.com/yzr007/LikeAnimatorUtil.git' // project git
-group = "com.yzr.likeanimatorutil"
-install {
-    repositories.mavenInstaller {
-        // This generates POM.xml with proper parameters
-        pom {
-            project {
-                packaging 'aar'
-                name 'Android LikeAnimator Util'
-                url siteUrl
-                licenses {
-                    license {
-                        name 'The MIT License (MIT)'
-                        url 'https://opensource.org/licenses/MIT'
-                    }
-                }
-                developers {
-                    developer {
-                        id 'yzr007'
-                        name 'zhengren.yang'
-                        email 'yangzr1990@gmail.com'
-                    }
-                }
-                scm {
-                    connection gitUrl
-                    developerConnection gitUrl
-                    url siteUrl
-                }
-            }
-        }
-    }
-}
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
+publish {
+    userOrg = 'yzrwad'//bintray.com用户名
+    groupId = 'com.yzrwad'//jcenter上的路径
+    artifactId = 'likeanimatorutil'//项目名称
+    publishVersion = '1.0.0'//版本号
+    desc = 'Android Add LikeAnimation'//描述，不重要
+    website = 'https://github.com/yzr007/LikeAnimatorUtil'//网站，不重要；尽量模拟github上的地址，例如我这样的；当然你有地址最好了
 }
 
-task javadoc(type: Javadoc) {
-    source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-artifacts {
-    archives javadocJar
-    archives sourcesJar
-}
-
-Properties properties = new Properties()
-boolean isHasFile = false
-if (project.rootProject.findProject('local.properties') != null){
-    isHasFile = true
-    properties.load(project.rootProject.file('local.properties').newDataInputStream())
-}
-bintray {
-    user = isHasFile ? properties.getProperty("bintray.user") : System.getenv("bintray.user")
-    key = isHasFile ? properties.getProperty("bintray.apikey") : System.getenv("bintray.apikey")
-    configurations = ['archives']
-    pkg {
-        repo = "maven"
-        name = "likeanimatorutil"                                                 // #CONFIG# project name in jcenter
-        websiteUrl = siteUrl
-        vcsUrl = gitUrl
-        licenses = ["MIT"]
-        publish = true
-    }
-}

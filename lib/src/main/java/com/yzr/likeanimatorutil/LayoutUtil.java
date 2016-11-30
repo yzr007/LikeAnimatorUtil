@@ -13,18 +13,18 @@ import android.view.WindowManager;
 
 public class LayoutUtil {
     /**
-     * »ñÈ¡¸ù²¼¾Ö
-     * @param context ActivityµÄÉÏÏÂÎÄ
-     * @return ActivityµÄ¸ù²¼¾Ö
+     * è·å–æ ¹å¸ƒå±€
+     * @param context Activityçš„ä¸Šä¸‹æ–‡
+     * @return Activityçš„æ ¹å¸ƒå±€
      */
     public static ViewGroup getRootView(Context context) {
         return ((ViewGroup) ((Activity)context).getWindow().getDecorView());
     }
 
     /**
-     * ÊÇ·ñÏÔÊ¾×´Ì¬À¸
-     * @param context ActivityµÄÉÏÏÂÎÄ
-     * @return ÊÇ·ñÏÔÊ¾×´Ì¬À¸
+     * æ˜¯å¦æ˜¾ç¤ºçŠ¶æ€æ 
+     * @param context Activityçš„ä¸Šä¸‹æ–‡
+     * @return æ˜¯å¦æ˜¾ç¤ºçŠ¶æ€æ 
      */
     public static boolean isShowStatus(Context context){
         WindowManager.LayoutParams attrs = ((Activity)context).getWindow().getAttributes();
@@ -35,9 +35,9 @@ public class LayoutUtil {
         }
     }
     /**
-     * »ñµÃ×´Ì¬À¸µÄ¸ß¶È
-     * @param context ActivityµÄÉÏÏÂÎÄ
-     * @return ×´Ì¬À¸µÄ¸ß¶È
+     * è·å¾—çŠ¶æ€æ çš„é«˜åº¦
+     * @param context Activityçš„ä¸Šä¸‹æ–‡
+     * @return çŠ¶æ€æ çš„é«˜åº¦
      */
     public static int getStatusHeight(Context context)
     {
